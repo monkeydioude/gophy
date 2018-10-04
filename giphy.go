@@ -1,17 +1,19 @@
 package gophy
 
 import (
+	"fmt"
+
 	"github.com/monkeydioude/tools/http"
 )
 
 const (
 	//APIHost is the base API Host
-	APIHost = "api.giphy.com"
+	APIHost = "https://api.giphy.com"
 )
 
 // Request is the interface that should be used for requesting Giphy
 type Request interface {
-	Do() (string, error)
+	Build() (string, error)
 	GetMethod() string
 	GetPath() string
 }
@@ -31,7 +33,23 @@ func NewGophy(APIKey string) *Gophy {
 }
 
 // Request handles any request to the Giphy endpoint
-func (g *Gophy) Request(r *Request) error {
-	http.Request()
-	return nil
+func (g *Gophy) Request(r Request) ([]byte, error) {
+	query, err := r.Build()
+	if err != nil {
+		return nil, err
+	}
+
+	endpoint := fmt.Sprintf("%s/%s/%s", g.APIHost, r.GetPath(), query)
+
+	res, err := http.Request(
+		nil,
+		nil,
+		endpoint,
+		r.GetMethod(),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return http.NewBytesResponseHTTP(res)
 }
