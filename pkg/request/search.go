@@ -1,4 +1,4 @@
-package gophy
+package request
 
 import (
 	"errors"
@@ -15,7 +15,7 @@ type Search struct {
 	Fmt    string
 }
 
-func (s *Search) Do() (string, error) {
+func (s *Search) Build() (string, error) {
 	if s.Query == "" {
 		return "", errors.New("At least 'query' parameter should be provided")
 	}
@@ -54,7 +54,7 @@ func (s *Search) GetMethod() string {
 }
 
 func (s *Search) GetPath() string {
-	return "/v1/gifs/search"
+	return "v1/gifs/search"
 }
 
 // NewSearch returns a Search from a query

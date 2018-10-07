@@ -1,4 +1,4 @@
-package gophy
+package request
 
 import "testing"
 
